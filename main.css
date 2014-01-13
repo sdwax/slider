@@ -1,0 +1,26 @@
+.item {
+    top: 100px;
+    width: 100px;
+    height: 100px;
+    position: absolute;
+    border: 1px solid black;
+    background: gray;
+    box-sizing: border-box;
+}
+
+#banner {
+    position: relative;
+    height: 400px;
+    border: 1px solid black;
+    overflow: hidden;
+}
+
+.item:nth-child(1) {
+    left: 0;
+}
+.item:nth-child(2) {
+    left: 110px;
+}
+.item:nth-child(3) {
+    left: 220px;
+}
