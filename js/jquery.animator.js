@@ -1,43 +1,69 @@
 (function($){
 
-    var defaults = {
-        itemSelector: '.item'
-    };
-
-    $.prototype.animator = function (options) {
-        options = $.extend({}, defaults, options || {});
-
+    $.prototype.animator = function () {
         return this.each(function () {
-            var root = $(this);
+            var node = $(this),
+                effectsList = getEffects(node),
+                properties = getPropertiesForEffects(node, effectsList);
 
-            root.find(options.itemSelector).each(function () {
-                var node = $(this),
-                    properties = {},
-                    easing = toCamel(getClassName(node, 'ease-')[0]),
-                    effects = getClassName(node, 'effect-');
+            prepareForEffects(node, effectsList);
 
-                for (var i = 0, len = effects.length; i < len; i++) {
-                    switch (effects[i]) {
-                        case 'effect-left-to-right':
-                            properties.left = node.css('left');
-                            node.css('left', -node.outerWidth() + 'px');
-                            break;
-                        case 'effect-fade-in':
-                            properties.opacity = node.css('opacity');
-                            node.css('opacity', 0);
-                            break;
-                    }
-                }
-
-                setTimeout(function () {
-                    node.animate(properties, node.data('time'), easing);
-                }, node.data('start'));
-            });
+            setTimeout(function () {
+                node.animate(properties, node.data('time'), getEase(node));
+            }, node.data('start'));
         });
     };
 
-    function getClassName(element, prefics) {
-        return $(element).attr('class').match(new RegExp('\\b'+prefics+'[-\\w]+', 'g'));
+    $.animator = {};
+
+    var effects = $.animator.effects = {
+        'effect-left-to-right': {
+            properties: ['left'],
+            prepare: function(node){
+                node.css('left', -node.outerWidth() + 'px');
+            }
+        },
+
+        'effect-fade-in': {
+            properties: ['opacity'],
+            prepare: function(node){
+                node.css('opacity', 0);
+            }
+        }
+    };
+
+    var getEffects = classNames('effect-'),
+        getEases   = classNames('ease-');
+
+    function getEase(node){
+        return toCamel(getEases(node)[0]);
+    }
+
+    function getPropertiesForEffects(node, effectsList){
+        var properties = {};
+
+        for (var i = 0, len = effectsList.length; i < len; i++) {
+            var effectName = effectsList[i];
+            $.extend(properties, node.css(effects[effectName].properties));
+        }
+
+        return properties;
+    }
+
+    function prepareForEffects(node, effectsList){
+        for (var i = 0, len = effectsList.length; i < len; i++) {
+            var effectName = effectsList[i];
+            effects[effectName].prepare(node);
+        }
+
+        return this;
+    }
+
+    function classNames(prefics) {
+        var reg = new RegExp('\\b'+prefics+'[-\\w]+', 'g');
+        return function (element) {
+            return element.prop('className').match(reg);
+        }
     }
 
     function toCamel(str) {

@@ -1,3 +1,3 @@
 ;jQuery(function ($) {
-    $('#banner').animator();
+    $('#banner .item').animator();
 });
