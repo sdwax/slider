@@ -42,7 +42,7 @@
     }
 
     function animate(node, props, time, ease) {
-        if (css3()) {
+        if (false /* if can animate with css */) {
             node.css('transition-time', time);
             node.css('transition-ease', ease);
             node.css(props);
