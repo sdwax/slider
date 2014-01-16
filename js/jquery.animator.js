@@ -2,17 +2,57 @@
 
     $.prototype.animator = function () {
         return this.each(function () {
-            var node = $(this),
-                effectsList = getEffects(node),
-                properties = getPropertiesForEffects(node, effectsList);
+            var node = $(this);
 
-            prepareForEffects(node, effectsList);
-
-            setTimeout(function () {
-                node.animate(properties, node.data('time'), getEase(node));
-            }, node.data('start'));
+            animator({
+                node: node,
+                effects: getEffects(node),
+                ease: getEase(node),
+                time: node.data('time'),
+                start: node.data('start')
+            });
         });
     };
+
+    function animator(options) {
+        var node = options.node;
+
+        if (node.hasClass('group-effect')) {
+            var interval = node.data('interval'),
+                i = 0,
+                start = node.data('start');
+
+            node.children().each(function () {
+                var ops = $.extend({}, options);
+                ops.node = $(this);
+                ops.start = options.start + start + interval * i++;
+                animator(ops);
+            });
+
+            return;
+        }
+
+        var properties = getPropertiesForEffects(node, options.effects);
+
+        prepareForEffects(node, options.effects);
+
+        setTimeout(function () {
+            animate(node, properties, options.time, options.ease)
+        }, options.start);
+    }
+
+    function animate(node, props, time, ease) {
+        if (css3()) {
+            node.css('transition-time', time);
+            node.css('transition-ease', ease);
+            node.css(props);
+        }
+        else {
+            node.animate(props, time, ease);
+        }
+    }
+
+    //region============ Utils ====================
 
     $.animator = {};
 
@@ -40,14 +80,13 @@
     }
 
     function getPropertiesForEffects(node, effectsList){
-        var properties = {};
-
+        var fields = [];
         for (var i = 0, len = effectsList.length; i < len; i++) {
             var effectName = effectsList[i];
-            $.extend(properties, node.css(effects[effectName].properties));
+            fields = fields.concat(effects[effectName].properties);
         }
 
-        return properties;
+        return node.css(fields);
     }
 
     function prepareForEffects(node, effectsList){
@@ -71,5 +110,7 @@
             return char.toUpperCase();
         });
     }
+
+    //endregion
 
 })(jQuery);

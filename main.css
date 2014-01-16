@@ -24,3 +24,34 @@
 .item:nth-child(3) {
     left: 220px;
 }
+.item:nth-child(4) {
+    left: 400px;
+    top: 220px;
+}
+
+.group-item {
+    position: absolute;
+    border: 1px dashed black;
+    overflow: hidden;
+    top: 100px;
+    left: 300px;
+}
+
+.group-item > * {
+    position: relative;
+    background: orange;
+    padding: 3px;
+    margin: 3px 0;
+    left: 0;
+    width: 400px;
+}
+
+.sergii {
+    background-color: transparent;
+}
+
+.sergii > * {
+    background-color: red;
+    position: relative;
+    left: 0;
+}

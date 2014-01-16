@@ -12,18 +12,30 @@
 <body>
 
 <div id="banner">
-    <div class="item effect-left-to-right ease-out-bounce"
-         data-time="500"
-         data-start="500"></div>
 
-    <div class="item effect-left-to-right effect-fade-in ease-out-bounce"
-         data-time="500"
-         data-start="1000"></div>
-
-    <div class="item effect-fade-in ease-out-bounce"
-         data-time="500"
-         data-start="1500"></div>
+    <div class="group-item group-effect effect-fade-in ease-out-bounce"
+         data-time="1000"
+         data-start="500"
+         data-interval="200">
+        <div>First</div>
+        <div>Second</div>
+        <div>Second</div>
+        <div>Second</div>
+        <div>Second</div>
+        <div>Last</div>
+    </div>
 </div>
 
 </body>
 </html>
+
+.group
+        ops.start = 200
+        ops.start = ops.start + 200
+        ops.start >> 400
+        .group
+            ops.start = 300
+            ops.start = ops.start + 200
+            ops.start >> 1200
+        ops.start >> 600
+        ops.start =

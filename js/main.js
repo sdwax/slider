@@ -1,3 +1,4 @@
 ;jQuery(function ($) {
-    $('#banner .item').animator();
+    $('#banner .item, #banner .group-item').animator();
 });
+
